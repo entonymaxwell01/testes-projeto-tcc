@@ -57,7 +57,7 @@ jobs:
           npm install
           npx prisma migrate deploy
           npm run dev &
-          npx -y wait-on tcp:3000 || sleep 10 # Aguarda a API subir (ajuste a porta se necessário)
+          npx -y wait-on tcp:3001 || sleep 10 # A API subiu na porta 3001
 
       # 5. Setup e Start do Frontend
       - name: Start Frontend
@@ -65,7 +65,7 @@ jobs:
         run: |
           npm install
           npm run dev &
-          npx -y wait-on tcp:3001 || sleep 10 # Aguarda o Frontend subir (ajuste a porta se necessário)
+          npx -y wait-on tcp:5173 || sleep 10 # Aguarda o Frontend subir (geralmente 3000 no React ou 5173 no Vite)
 
       # 6. Instalação das dependências de QA
       - name: Install QA dependencies
