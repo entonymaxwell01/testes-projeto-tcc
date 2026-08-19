@@ -1,4 +1,4 @@
-# 🚀 Automação de Testes Corporativos | Portfólio QA
+# 🚀 Automação de Testes  | Portfólio QA
 
 Este repositório consolida uma estratégia de qualidade de software aplicada a um ecossistema real e completo (Sistema de Gestão de Testes/TCC). 
 
