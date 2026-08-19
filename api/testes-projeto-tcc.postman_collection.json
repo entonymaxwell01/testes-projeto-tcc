@@ -1,0 +1,388 @@
+{
+  "info": {
+    "_postman_id": "1841f390-2641-4e65-a407-768201a650d8",
+    "name": "testes-projeto-tcc",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "19819337",
+    "_collection_link": "https://go.postman.co/collection/19819337-1841f390-2641-4e65-a407-768201a650d8?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "setup",
+      "item": [
+        {
+          "name": "reset-bd",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-qa-reset-token",
+                "value": "{{qa_reset_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseURL}}/qa/reset-db",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "qa",
+                "reset-db"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Login",
+      "item": [
+        {
+          "name": "Realizar Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "\r",
+                  "pm.test(\"Status code é 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "var jsonData = pm.response.json();\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"Token está presente na resposta\", function () {\r",
+                  "    pm.expect(jsonData).to.have.property(\"token\"); \r",
+                  "});\r",
+                  "\r",
+                  "if (jsonData.token) {\r",
+                  "    pm.environment.set(\"jwt_token\", jsonData.token);\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"{{test_email}}\",\r\n    \"senha\": \"{{test_senha}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/login",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "login"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Projetos",
+      "item": [
+        {
+          "name": "Listar projetos",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code é 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}/projetos",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "projetos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Criar Projeto",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "\r",
+                  "pm.test(\"Status code é 201\", function () {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "\r",
+                  "var jsonData = pm.response.json();\r",
+                  "\r",
+                  "\r",
+                  "pm.test(\"Id do projeto é gerado\", function () {\r",
+                  "    pm.expect(jsonData).to.have.property(\"id\"); \r",
+                  "});\r",
+                  "\r",
+                  "if (jsonData.id) {\r",
+                  "    pm.environment.set(\"id_projeto\", jsonData.id);\r",
+                  "}\r",
+                  "\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"titulo\": \"Projeto TCC GATEC\",\r\n  \"descricao\": \"Sistema de inteligência para geração de testes\",\r\n  \"dataInicio\": \"2024-05-15\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/projetos",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "projetos"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Cartão",
+      "item": [
+        {
+          "name": "Criar cartao",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "\r",
+                  "pm.test(\"Status code é 201\", function () {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "\r",
+                  "var jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Id do cartão é gerado\", function () {\r",
+                  "    pm.expect(jsonData).to.have.property(\"id\"); \r",
+                  "});\r",
+                  "\r",
+                  "if (jsonData.id) {\r",
+                  "    pm.environment.set(\"id_cartao\", jsonData.id);\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"codigo\": \"US-001\",\r\n  \"titulo\": \"Implementar Tela de Login\",\r\n  \"descricao\": \"Como usuário, quero conseguir fazer login usando email e senha para acessar o sistema.\",\r\n  \"prioridade\": \"Alta\",\r\n  \"projetoId\": \"{{id_projeto}}\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/cartoes",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "cartoes"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Caso de testes",
+      "item": [
+        {
+          "name": "Criar caso de testes",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "\r",
+                  "pm.test(\"Status code é 201\", function () {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "\r",
+                  "var jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Id do caso de testes é gerado\", function () {\r",
+                  "    pm.expect(jsonData).to.have.property(\"id\"); \r",
+                  "});\r",
+                  "\r",
+                  "if (jsonData.id) {\r",
+                  "    pm.environment.set(\"id_caso_teste\", jsonData.id);\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"titulo\": \"Login com credenciais válidas\",\r\n  \"preCondicoes\": \"O usuário deve estar cadastrado no sistema e a API deve estar no ar.\",\r\n  \"passos\": \"1. Acessar a tela de login.\\n2. Preencher o campo de email com um email válido.\\n3. Preencher a senha correta.\\n4. Clicar no botão de 'Entrar'.\",\r\n  \"resultadoEsperado\": \"O sistema deve autenticar o usuário e redirecionar para a tela (Dashboard) de projetos.\",\r\n  \"cartaoId\": \"{{id_cartao}}\",\r\n  \"status\": \"Não Executado\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/casosteste",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "casosteste"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Critérios",
+      "item": [
+        {
+          "name": "Criterios",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"descricao\": \"O sistema deve bloquear a conta após 3 tentativas de senha incorreta.\",\r\n  \"usaParticaoEquivalencia\": false,\r\n  \"usaValorLimite\": true,\r\n  \"usaTabelaDecisao\": true,\r\n  \"cartaoId\": \"{{id_cartao}}\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}/criterios",
+              "host": [
+                "{{baseURL}}"
+              ],
+              "path": [
+                "criterios"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{jwt_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ]
+}
