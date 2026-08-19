@@ -50,6 +50,7 @@ jobs:
         working-directory: ./projeto-tcc
         env:
           DATABASE_URL: postgresql://admin:password@localhost:5432/tcc_db
+          DIRECT_URL: postgresql://admin:password@localhost:5432/tcc_db
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
           QA_RESET_TOKEN: ${{ secrets.QA_RESET_TOKEN }}
         run: |
