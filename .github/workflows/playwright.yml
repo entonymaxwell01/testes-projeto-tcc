@@ -83,9 +83,12 @@ jobs:
         run: npx playwright test
         env:
           # Se os testes precisarem das mesmas chaves, elas são repassadas aqui
-          BASE_URL: http://localhost:3001
+          BASE_URL: http://localhost:5173
+          API_URL: http://localhost:3001
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
           QA_RESET_TOKEN: ${{ secrets.QA_RESET_TOKEN }}
+          USER_EMAIL: ${{ secrets.USER_EMAIL }}
+          USER_PASSWORD: ${{ secrets.USER_PASSWORD }}
 
       # 9. Upload dos relatórios
       - uses: actions/upload-artifact@v4
