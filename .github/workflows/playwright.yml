@@ -1,27 +1,95 @@
 name: Playwright Tests
 on:
   push:
-    branches: [ main, master ]
+    branches: [main, master]
   pull_request:
-    branches: [ main, master ]
+    branches: [main, master]
 jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
+
+    # Inicia o container de PostgreSQL
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: admin
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: tcc_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
-      with:
-        node-version: lts/*
-    - name: Install dependencies
-      run: npm ci
-    - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
-    - name: Run Playwright tests
-      run: npx playwright test
-    - uses: actions/upload-artifact@v4
-      if: ${{ !cancelled() }}
-      with:
-        name: playwright-report
-        path: playwright-report/
-        retention-days: 30
+      # 1. Checkout do projeto atual (QA Automation)
+      - name: Checkout QA Automation
+        uses: actions/checkout@v4
+        with:
+          path: qa-automation
+
+      # 2. Checkout do projeto de Backend/Frontend
+      - name: Checkout API and Frontend
+        uses: actions/checkout@v4
+        with:
+          repository: entonymaxwell01/projeto-tcc
+          token: ${{ secrets.API_REPO_TOKEN }}
+          path: projeto-tcc
+
+      # 3. Setup do Node.js
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      # 4. Setup e Start do Backend
+      - name: Start API (Backend)
+        working-directory: ./projeto-tcc
+        env:
+          DATABASE_URL: postgresql://admin:password@localhost:5432/tcc_db
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          QA_RESET_TOKEN: ${{ secrets.QA_RESET_TOKEN }}
+        run: |
+          npm install
+          npx prisma migrate deploy
+          npm run dev &
+          npx wait-on tcp:3000 || sleep 10 # Aguarda a API subir (ajuste a porta se necessário)
+
+      # 5. Setup e Start do Frontend
+      - name: Start Frontend
+        working-directory: ./projeto-tcc/frontend
+        run: |
+          npm install
+          npm run dev &
+          npx wait-on tcp:3001 || sleep 10 # Aguarda o Frontend subir (ajuste a porta se necessário)
+
+      # 6. Instalação das dependências de QA
+      - name: Install QA dependencies
+        working-directory: ./qa-automation
+        run: npm ci
+
+      # 7. Instalação dos navegadores do Playwright
+      - name: Install Playwright Browsers
+        working-directory: ./qa-automation
+        run: npx playwright install --with-deps
+
+      # 8. Execução dos testes
+      - name: Run Playwright tests
+        working-directory: ./qa-automation
+        run: npx playwright test
+        env:
+          # Se os testes precisarem das mesmas chaves, elas são repassadas aqui
+          BASE_URL: http://localhost:3001
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          QA_RESET_TOKEN: ${{ secrets.QA_RESET_TOKEN }}
+
+      # 9. Upload dos relatórios
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: qa-automation/playwright-report/
+          retention-days: 30
