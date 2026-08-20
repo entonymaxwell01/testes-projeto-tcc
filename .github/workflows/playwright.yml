@@ -66,7 +66,18 @@ jobs:
             -H "x-qa-reset-token: ${{ secrets.QA_RESET_TOKEN }}" \
             -H "Content-Type: application/json"
 
-      # 6. Setup e Start do Frontend
+      # 6. Testes de API com Newman
+      - name: Run API Tests with Newman
+        working-directory: ./qa-automation/api
+        run: |
+          npm install -g newman
+          newman run testes-projeto-tcc.postman_collection.json \
+            -e Setup.postman_environment.json \
+            --env-var "qa_reset_token=${{ secrets.QA_RESET_TOKEN }}" \
+            --env-var "test_email=${{ secrets.USER_EMAIL }}" \
+            --env-var "test_senha=${{ secrets.USER_PASSWORD }}"
+
+      # 7. Setup e Start do Frontend
       - name: Start Frontend
         working-directory: ./projeto-tcc/frontend
         run: |
@@ -74,12 +85,12 @@ jobs:
           npm run dev &
           npx -y wait-on tcp:5173 || sleep 10 # Aguarda o Frontend subir (geralmente 3000 no React ou 5173 no Vite)
 
-      # 7. Instalação das dependências de QA
+      # 8. Instalação das dependências de QA
       - name: Install QA dependencies
         working-directory: ./qa-automation
         run: npm ci
 
-      # 8. Cache dos navegadores do Playwright
+      # 9. Cache dos navegadores do Playwright
       - name: Store Playwright's Version
         working-directory: ./qa-automation
         run: echo "PLAYWRIGHT_VERSION=$(npx playwright --version | cut -d' ' -f2)" >> $GITHUB_ENV
@@ -91,12 +102,12 @@ jobs:
           path: ~/.cache/ms-playwright
           key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
 
-      # 9. Instalação dos navegadores do Playwright (Rápido com o Cache)
+      # 10. Instalação dos navegadores do Playwright (Rápido com o Cache)
       - name: Install Playwright Browsers
         working-directory: ./qa-automation
         run: npx playwright install --with-deps
 
-      # 10. Execução dos testes
+      # 11. Execução dos testes
       - name: Run Playwright tests
         working-directory: ./qa-automation
         run: npx playwright test
@@ -109,7 +120,7 @@ jobs:
           USER_EMAIL: ${{ secrets.USER_EMAIL }}
           USER_PASSWORD: ${{ secrets.USER_PASSWORD }}
 
-      # 11. Upload dos relatórios
+      # 12. Upload dos relatórios
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
