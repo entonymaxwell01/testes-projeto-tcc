@@ -19,6 +19,7 @@ export class LoginPage {
     this.loginButton = page.getByTestId('btn-login');
     this.loginText = page.getByText('TestBoard');
     this.errorMessage = page.getByTestId('msg-erro'); 
+  
   }
 
   async goto() {
@@ -33,7 +34,7 @@ export class LoginPage {
 
 
   async expectLoginSuccess() {
-    await this.page.waitForURL('/');
+    await this.page.waitForURL('/projetos');
     await expect(this.loginText).toBeVisible();
   }
 
@@ -41,4 +42,6 @@ export class LoginPage {
     await expect(this.errorMessage).toBeVisible();
     await expect(this.errorMessage).toHaveText(expectedText);
   }
+
+  
 }
