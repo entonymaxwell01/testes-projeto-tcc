@@ -79,12 +79,24 @@ jobs:
         working-directory: ./qa-automation
         run: npm ci
 
-      # 8. Instalação dos navegadores do Playwright
+      # 8. Cache dos navegadores do Playwright
+      - name: Store Playwright's Version
+        working-directory: ./qa-automation
+        run: echo "PLAYWRIGHT_VERSION=$(npx playwright --version | cut -d' ' -f2)" >> $GITHUB_ENV
+
+      - name: Cache Playwright Browsers
+        uses: actions/cache@v4
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
+
+      # 9. Instalação dos navegadores do Playwright (Rápido com o Cache)
       - name: Install Playwright Browsers
         working-directory: ./qa-automation
         run: npx playwright install --with-deps
 
-      # 9. Execução dos testes
+      # 10. Execução dos testes
       - name: Run Playwright tests
         working-directory: ./qa-automation
         run: npx playwright test
@@ -97,7 +109,7 @@ jobs:
           USER_EMAIL: ${{ secrets.USER_EMAIL }}
           USER_PASSWORD: ${{ secrets.USER_PASSWORD }}
 
-      # 10. Upload dos relatórios
+      # 11. Upload dos relatórios
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
