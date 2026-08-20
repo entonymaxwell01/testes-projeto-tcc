@@ -55,7 +55,7 @@ jobs:
           QA_RESET_TOKEN: ${{ secrets.QA_RESET_TOKEN }}
         run: |
           npm install
-          npx prisma migrate deploy
+          npx prisma db push
           npm run dev &
           npx -y wait-on tcp:3001 || sleep 10 # A API subiu na porta 3001
 
