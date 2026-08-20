@@ -70,8 +70,9 @@ jobs:
       - name: Run API Tests with Newman
         working-directory: ./qa-automation/api
         run: |
-          npm install -g newman
+          npm install -g newman newman-reporter-htmlextra
           newman run testes-projeto-tcc.postman_collection.json \
+            -r cli,htmlextra --reporter-htmlextra-export newman-report.html \
             --env-var "baseURL=http://localhost:3001" \
             --env-var "qa_reset_token=${{ secrets.QA_RESET_TOKEN }}" \
             --env-var "test_email=${{ secrets.USER_EMAIL }}" \
@@ -126,4 +127,12 @@ jobs:
         with:
           name: playwright-report
           path: qa-automation/playwright-report/
+          retention-days: 30
+
+      # 13. Upload do relatório do Newman
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: newman-report
+          path: qa-automation/api/newman-report.html
           retention-days: 30
