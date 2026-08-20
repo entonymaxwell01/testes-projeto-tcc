@@ -13,3 +13,6 @@ playwright/.auth
 
 node_modules
 *.postman_environment.json
+
+allure-report/
+allure-results/

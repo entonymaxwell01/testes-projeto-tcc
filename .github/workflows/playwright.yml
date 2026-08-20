@@ -8,6 +8,8 @@ jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # Necessário para publicar no GitHub Pages
 
     # Inicia o container de PostgreSQL
     services:
@@ -121,13 +123,29 @@ jobs:
           USER_EMAIL: ${{ secrets.USER_EMAIL }}
           USER_PASSWORD: ${{ secrets.USER_PASSWORD }}
 
-      # 12. Upload dos relatórios
+      # 12. Gerar Relatório Allure
+      - name: Generate Allure Report
+        working-directory: ./qa-automation
+        if: ${{ !cancelled() }}
+        run: |
+          npm install -g allure-commandline
+          allure generate ./allure-results --clean -o ./allure-report
+
+      # 13. Upload do Relatório Allure (Artefato)
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
-          name: playwright-report
-          path: qa-automation/playwright-report/
+          name: allure-report
+          path: qa-automation/allure-report/
           retention-days: 30
+
+      # 14. Hospedar Allure no GitHub Pages (Portfólio)
+      - name: Deploy Allure to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        if: ${{ !cancelled() }}
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./qa-automation/allure-report
 
       # 13. Upload do relatório do Newman
       - uses: actions/upload-artifact@v4
