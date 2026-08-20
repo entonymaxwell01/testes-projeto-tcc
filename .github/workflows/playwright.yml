@@ -72,7 +72,7 @@ jobs:
         run: |
           npm install -g newman
           newman run testes-projeto-tcc.postman_collection.json \
-            -e Setup.postman_environment.json \
+            --env-var "baseURL=http://localhost:3001" \
             --env-var "qa_reset_token=${{ secrets.QA_RESET_TOKEN }}" \
             --env-var "test_email=${{ secrets.USER_EMAIL }}" \
             --env-var "test_senha=${{ secrets.USER_PASSWORD }}"
