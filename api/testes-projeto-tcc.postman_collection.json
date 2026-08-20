@@ -285,6 +285,10 @@
                   "\r",
                   "if (jsonData.id) {\r",
                   "    pm.environment.set(\"id_caso_teste\", jsonData.id);\r",
+                  "}\r",
+                  "\r",
+                  "if (pm.response.code !== 201) {\r",
+                  "    console.log(\"ERRO DA API:\", pm.response.text());\r",
                   "}"
                 ],
                 "type": "text/javascript",
