@@ -12,8 +12,6 @@ export class LoginPage {
   constructor(page: Page) {
     this.page = page;
 
-    //Locators
-    // O Playwright tem um método nativo e mais limpo para data-testid:
     this.emailInput = page.getByTestId('input-email');
     this.passwordInput = page.getByTestId('input-senha');
     this.loginButton = page.getByTestId('btn-login');
