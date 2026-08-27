@@ -1,21 +1,18 @@
 import { test as setup } from '@playwright/test';
 import path from 'path';
 import 'dotenv/config';
+import { LoginPage } from '../../pages/LoginPage';
 
 const authFile = path.join(__dirname, '../../playwright/.auth/user.json');
-const api_url = process.env.API_URL
 
-setup('authenticate via API', async ({ request }) => {
-  const response = await request.post(`${api_url}/login`, {
-    data: {
-      email: process.env.USER_EMAIL,
-      senha: process.env.USER_PASSWORD
-    }
-  });
+setup('authenticate via UI', async ({ page }) => {
+  const loginPage = new LoginPage(page);
+  
+  await loginPage.goto();
+  await loginPage.login(process.env.USER_EMAIL as string, process.env.USER_PASSWORD as string);
+  
 
-  //console.log(response)
+  await loginPage.expectLoginSuccess();
 
-  setup.expect(response.ok()).toBeTruthy();
-
-  await request.storageState({ path: authFile });
+  await page.context().storageState({ path: authFile });
 });
