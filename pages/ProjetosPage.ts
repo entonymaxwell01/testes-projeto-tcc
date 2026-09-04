@@ -21,7 +21,6 @@ export class ProjetosPage {
     this.errorMessage = page.getByTestId('msg-erro').first();  
     this.successMessage = page.getByTestId('msg-sucesso').first();  
 
-  
   }
 
   async goto() {
@@ -44,6 +43,19 @@ export class ProjetosPage {
   async expectErrorMessage(expectedText: string) {
     await expect(this.errorMessage).toBeVisible();
     await expect(this.errorMessage).toContainText(expectedText);
+  }
+
+  async editarProjeto(nomeAtual: string, novoNome: string, novaDescricao: string) {
+    const projetoContainer = this.page.getByTestId(/project-card-.*/ ).filter({ hasText: nomeAtual });
+
+    const btnHover = projetoContainer.getByTestId(/project-menu-toggle-.*/);
+    const btnEdit = projetoContainer.getByTestId(/project-edit-button-.*/);
+
+    await btnHover.click();
+    await btnEdit.click();
+    await this.nomeProjetoInput.fill(novoNome);
+    await this.descricaoProjetoInput.fill(novaDescricao);
+    await this.salvarProjetoButton.click();
   }
 
 
