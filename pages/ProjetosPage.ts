@@ -58,6 +58,19 @@ export class ProjetosPage {
     await this.salvarProjetoButton.click();
   }
 
+  async excluirProjeto(nomeProjeto: string){
+    const projetoContainer = this.page.getByTestId(/project-card-.*/ ).filter({ hasText: nomeProjeto });
+
+    const btnHover = projetoContainer.getByTestId(/project-menu-toggle-.*/);
+    const btnDelete = projetoContainer.getByTestId(/project-delete-button-.*/);
+
+    await btnHover.click();
+    await btnDelete.click();
+
+    await this.page.getByRole('button', { name: 'Excluir' }).click();
+
+  }
+
 
 
 

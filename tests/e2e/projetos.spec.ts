@@ -45,9 +45,21 @@ test('deve editar um projeto com sucesso', async () => {
         descricao: faker.lorem.paragraph()
     };
 
-    // Passamos o nome original do projeto (projetoData.nome) para localizá-lo na lista
     await projetosPage.editarProjeto(projetoData.nome, projetoDataUpdate.nome, projetoDataUpdate.descricao);
     await projetosPage.expectSuccessMessage('Projeto atualizado com sucesso');
+})
+
+test('deve excluir um projeto com sucesso', async() => {
+        const projetoData = {
+        nome: `Projeto ${faker.company.name()}`,
+        descricao: faker.lorem.paragraph()
+    };
+
+    await projetosPage.cadastrarNovoProjeto(projetoData.nome, projetoData.descricao);
+
+    await projetosPage.excluirProjeto(projetoData.nome);
+    await projetosPage.expectSuccessMessage('Projeto excluído com sucesso!');
+
 })
 
 
