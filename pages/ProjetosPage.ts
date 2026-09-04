@@ -8,6 +8,8 @@ export class ProjetosPage {
   readonly nomeProjetoInput: Locator;
   readonly descricaoProjetoInput: Locator;
   readonly salvarProjetoButton: Locator;
+  readonly errorMessage: Locator;
+  readonly successMessage: Locator;
 
 
   constructor(page: Page) {
@@ -16,6 +18,8 @@ export class ProjetosPage {
     this.nomeProjetoInput = page.getByTestId('project-name-input');
     this.descricaoProjetoInput = page.getByTestId('project-desc-input');
     this.salvarProjetoButton = page.getByTestId('modal-submit-button');
+    this.errorMessage = page.getByTestId('msg-erro').first();  
+    this.successMessage = page.getByTestId('msg-sucesso').first();  
 
   
   }
@@ -30,6 +34,16 @@ export class ProjetosPage {
     await this.descricaoProjetoInput.fill(descricao);
     await this.salvarProjetoButton.click();
 
+  }
+
+  async expectSuccessMessage(expectedText: string) {
+    await expect(this.successMessage).toBeVisible();
+    await expect(this.successMessage).toContainText(expectedText);
+  }
+
+  async expectErrorMessage(expectedText: string) {
+    await expect(this.errorMessage).toBeVisible();
+    await expect(this.errorMessage).toContainText(expectedText);
   }
 
 

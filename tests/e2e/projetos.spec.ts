@@ -19,7 +19,18 @@ test('Deve cadastrar um projeto com sucesso', async () => {
     };
 
     await projetosPage.cadastrarNovoProjeto(projetoData.nome, projetoData.descricao);
+    await projetosPage.expectSuccessMessage('Projeto criado com sucesso');
 });
+
+test('Deve falhar ao tentar cadastrar um projeto sem nome', async() => {
+    const projetoData = {
+        nome: '',
+        descricao: faker.lorem.paragraph()
+    };
+
+    await projetosPage.cadastrarNovoProjeto(projetoData.nome, projetoData.descricao);
+    await projetosPage.expectErrorMessage('O nome do projeto é obrigatório.');
+})
 
 
 
