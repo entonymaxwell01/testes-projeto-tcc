@@ -29,5 +29,10 @@ test('Deve falhar ao tentar realizar login com email invalido', async () => {
   await loginPage.expectLoginError('Usuário ou senha inválidos.');
 });
 
+test('Deve falhar ao tentar realizar login com campos campos vazios', async () => {
+  await loginPage.login('', '');
+  await loginPage.expectLoginError('Preencha todos os campos obrigatórios.');
+});
+
 
 
