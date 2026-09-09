@@ -24,7 +24,7 @@ test.beforeEach(async ({ page, request }) => {
   await page.goto(`/projetos/${projetoId}/kanban`);
 });
 
-test.only("Deve criar um card com sucesso", async ({ page }) => {
+test("Deve criar um card com sucesso", async ({ page }) => {
   const cardData = {
     codUs: `US-${faker.string.numeric()}`,
     prioridade: "Baixa",
