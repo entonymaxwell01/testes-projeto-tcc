@@ -1,5 +1,5 @@
-import { defineConfig, devices } from '@playwright/test';
-import 'dotenv/config';
+import { defineConfig, devices } from "@playwright/test";
+import "dotenv/config";
 
 /**
  * Read environment variables from file.
@@ -13,7 +13,7 @@ import 'dotenv/config';
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
-  testDir: './tests',
+  testDir: "./tests",
   /* Run tests in files in parallel */
   fullyParallel: false,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -23,40 +23,43 @@ export default defineConfig({
   /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-reporter: [
-    ['html', { open: 'never' }],
-    ['allure-playwright', {
-      detail: true,
-      outputFolder: 'allure-results',
-      suiteTitle: false
-    }]
+  reporter: [
+    ["html", { open: "never" }],
+    [
+      "allure-playwright",
+      {
+        detail: true,
+        outputFolder: "allure-results",
+        suiteTitle: false,
+      },
+    ],
   ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('')`. */
-    baseURL: process.env.BASE_URL || 'http://localhost:3001',
-    trace: 'retain-on-failure',
-    screenshot: 'only-on-failure',
-    video: 'retain-on-failure',
+    baseURL: process.env.BASE_URL || "http://localhost:5173",
+    trace: "retain-on-failure",
+    screenshot: "only-on-failure",
+    video: "retain-on-failure",
   },
 
   /* Configure projects for major browsers */
   projects: [
     // 1. Projeto de Setup que roda primeiro
     {
-      name: 'setup',
+      name: "setup",
       testMatch: /.*\.setup\.ts/,
     },
-    
+
     // 2. Projeto principal que depende do setup
     {
-      name: 'chromium',
-      use: { 
-        ...devices['Desktop Chrome'],
+      name: "chromium",
+      use: {
+        ...devices["Desktop Chrome"],
         // Injeta a sessão salva em todos os testes
-        storageState: 'playwright/.auth/user.json',
+        storageState: "playwright/.auth/user.json",
       },
-      dependencies: ['setup'], // Garante que o login ocorra antes
+      dependencies: ["setup"], // Garante que o login ocorra antes
     },
 
     // {
@@ -65,12 +68,13 @@ reporter: [
     // },
 
     {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'] ,
-             // Injeta a sessão salva em todos os testes
-        storageState: 'playwright/.auth/user.json',
+      name: "webkit",
+      use: {
+        ...devices["Desktop Safari"],
+        // Injeta a sessão salva em todos os testes
+        storageState: "playwright/.auth/user.json",
       },
-      dependencies: ['setup'],
+      dependencies: ["setup"],
     },
 
     /* Test against mobile viewports. */
@@ -95,6 +99,4 @@ reporter: [
   ],
 
   /* Run your local dev server before starting the tests */
-
-
 });
