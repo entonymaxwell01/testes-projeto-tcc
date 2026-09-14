@@ -11,7 +11,6 @@ Fugindo de scripts frágeis em sites públicos de demonstração, este projeto u
 - **Testes de API (Postman & Newman):** Validação de contratos, _status codes_ e tempo de resposta. A suíte opera de forma encadeada (CRUD completo), utilizando herança de tokens JWT dinâmicos e limpeza de banco autônoma para não gerar lixo de dados.
 - **Testes E2E (Playwright):** Automação do caminho crítico da interface gráfica aplicando estritamente o padrão de projeto _Page Object Model (POM)_ e localizadores blindados via `data-testid`.
 - **Testes de Performance (k6):** Scripts de _Load Testing_ configurados com _thresholds_ para validar a estabilidade e mapear gargalos de infraestrutura nas rotas do backend.
-- **Business Driven Development (Robot Framework):** Validação de regras de negócio complexas focada na clareza e rastreabilidade utilizando sintaxe _Keyword-driven_.
 - **CI/CD & Relatórios:** Pipeline completa estruturada com GitHub Actions, orquestrando a subida do backend e banco de dados, reset de massa, execução dos testes (API + UI) e publicação contínua do relatório de qualidade no [GitHub Pages](https://entonymaxwell01.github.io/testes-projeto-tcc/).
 
 ## 📊 Monitoramento de Performance (Grafana + InfluxDB)
