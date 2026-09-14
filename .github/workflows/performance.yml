@@ -1,0 +1,77 @@
+name: Performance Testing
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  k6-load-test:
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: admin
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: tcc_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout QA Automation
+        uses: actions/checkout@v4
+        with:
+          path: qa-automation
+
+      - name: Checkout API and Frontend
+        uses: actions/checkout@v4
+        with:
+          repository: entonymaxwell01/projeto-tcc
+          token: ${{ secrets.API_REPO_TOKEN }}
+          path: projeto-tcc
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - name: Start API (Backend)
+        working-directory: ./projeto-tcc
+        env:
+          DATABASE_URL: postgresql://admin:password@localhost:5432/tcc_db
+          DIRECT_URL: postgresql://admin:password@localhost:5432/tcc_db
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+        run: |
+          npm install
+          npx prisma db push
+          npm run dev &
+          npx -y wait-on tcp:3001 || sleep 10
+
+      - name: Seed Performance Users
+        working-directory: ./qa-automation/performance
+        run: |
+          node seed-perf-users.js
+
+      - name: Install and Run k6
+        working-directory: ./qa-automation/performance
+        env:
+          API_URL: http://localhost:3001
+        run: |
+          sudo gpg -k
+          sudo gpg --no-default-keyring --keyring /usr/share/keyrings/k6-archive-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C5AD17C747E3415A3642D57D77C6C491D6AC1D69
+          echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
+          sudo apt-get update
+          sudo apt-get install k6
+
+          # Escolha o teste que deseja rodar na pipeline (Smoke, Load, Spike, ou Stress)
+          # Recomenda-se o Smoke Test ou um Load Test rápido em CI/CD para não travar a pipeline por muito tempo.
+          k6 run load-test.js
