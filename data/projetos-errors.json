@@ -1,0 +1,14 @@
+[
+  {
+    "descricao": "nome em branco",
+    "nome": "",
+    "descricaoProjeto": "Descrição válida para teste",
+    "mensagemEsperada": "O nome do projeto é obrigatório."
+  },
+  {
+    "descricao": "nome composto apenas por espaços",
+    "nome": "    ",
+    "descricaoProjeto": "Descrição válida para teste",
+    "mensagemEsperada": "O nome do projeto é obrigatório."
+  }
+]

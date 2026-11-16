@@ -1,5 +1,6 @@
 import { test } from "../../fixtures/page-fixtures";
 import { faker } from "@faker-js/faker/locale/pt_BR";
+import projetosErrors from "../../data/projetos-errors.json";
 
 test("Deve cadastrar um projeto com sucesso", async ({ projetosPage }) => {
   const projetoData = {
@@ -16,19 +17,18 @@ test("Deve cadastrar um projeto com sucesso", async ({ projetosPage }) => {
   await projetosPage.expectSuccessMessage("Projeto criado com sucesso");
 });
 
-test("Deve falhar ao tentar cadastrar um projeto sem nome", async ({
-  projetosPage,
-}) => {
-  const projetoData = {
-    nome: "",
-    descricao: faker.lorem.paragraph(),
-  };
-
-  await projetosPage.cadastrarNovoProjeto(
-    projetoData.nome,
-    projetoData.descricao,
-  );
-  await projetosPage.expectErrorMessage("O nome do projeto é obrigatório.");
+test.describe("Projetos - Validação de campos obrigatórios", () => {
+  for (const cenario of projetosErrors) {
+    test(`Deve falhar ao cadastrar projeto com ${cenario.descricao}`, async ({
+      projetosPage,
+    }) => {
+      await projetosPage.cadastrarNovoProjeto(
+        cenario.nome,
+        cenario.descricaoProjeto,
+      );
+      await projetosPage.expectErrorMessage(cenario.mensagemEsperada);
+    });
+  }
 });
 
 test("deve editar um projeto com sucesso", async ({ projetosPage }) => {

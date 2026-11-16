@@ -1,0 +1,32 @@
+[
+  {
+    "descricao": "senha inválida para usuário cadastrado",
+    "email": "{{USER_EMAIL}}",
+    "senha": "senha-incorreta-123",
+    "mensagemEsperada": "Usuário ou senha inválidos."
+  },
+  {
+    "descricao": "email inexistente",
+    "email": "email-nao-cadastrado@email.com",
+    "senha": "qualquer-senha",
+    "mensagemEsperada": "Usuário ou senha inválidos."
+  },
+  {
+    "descricao": "ambos os campos vazios",
+    "email": "",
+    "senha": "",
+    "mensagemEsperada": "Preencha todos os campos obrigatórios."
+  },
+  {
+    "descricao": "apenas senha preenchida",
+    "email": "",
+    "senha": "senha-qualquer",
+    "mensagemEsperada": "Preencha todos os campos obrigatórios."
+  },
+  {
+    "descricao": "apenas email preenchido",
+    "email": "{{USER_EMAIL}}",
+    "senha": "",
+    "mensagemEsperada": "Preencha todos os campos obrigatórios."
+  }
+]
