@@ -1,14 +1,10 @@
-import { test } from "@playwright/test";
-import { CardPage } from "../../pages/CardPage";
+import { test } from "../../fixtures/page-fixtures";
 import { faker } from "@faker-js/faker/locale/pt_BR";
 import { getAuthToken } from "../../utils/auth";
 
-let cardPage: CardPage;
 let projetoId: string;
 
 test.beforeEach(async ({ page, request }) => {
-  cardPage = new CardPage(page);
-
   const res = await request.post("http://localhost:3001/projetos", {
     data: {
       titulo: `Projeto ${faker.company.name()}`,
@@ -19,12 +15,11 @@ test.beforeEach(async ({ page, request }) => {
   });
 
   projetoId = (await res.json()).id;
-  console.log(projetoId);
 
   await page.goto(`/projetos/${projetoId}/kanban`);
 });
 
-test("Deve criar um card com sucesso", async ({ page }) => {
+test("Deve criar um card com sucesso", async ({ cardPage }) => {
   const cardData = {
     codUs: `US-${faker.string.numeric()}`,
     prioridade: "Baixa",

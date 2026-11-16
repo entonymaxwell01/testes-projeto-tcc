@@ -1,38 +1,31 @@
-import { test } from '@playwright/test';
-import { LoginPage } from '../../pages/LoginPage';
+import { test } from "../../fixtures/page-fixtures";
 test.use({ storageState: { cookies: [], origins: [] } });
 
-const userEmail = process.env.USER_EMAIL || '';
-const userPassword = process.env.USER_PASSWORD || '';
+const userEmail = process.env.USER_EMAIL || "";
+const userPassword = process.env.USER_PASSWORD || "";
 
-let loginPage: LoginPage;
-
-test.beforeEach(async ({ page }) => {
-  loginPage = new LoginPage(page);
-    await loginPage.goto();
-});
-
-test('Deve realizar login com sucesso', async () => {
-
+test("Deve realizar login com sucesso", async ({ loginPage }) => {
   await loginPage.login(userEmail, userPassword);
   await loginPage.expectLoginSuccess();
 });
 
-test('Deve falhar ao tentar realizar login com senha invalida', async () => {
-  await loginPage.login(userEmail, 'senha-incorreta');
-  await loginPage.expectLoginError('Usuário ou senha inválidos.');
+test("Deve falhar ao tentar realizar login com senha invalida", async ({
+  loginPage,
+}) => {
+  await loginPage.login(userEmail, "senha-incorreta");
+  await loginPage.expectLoginError("Usuário ou senha inválidos.");
 });
 
-
-test('Deve falhar ao tentar realizar login com email invalido', async () => {
-  await loginPage.login('email-invalido@email.com', userPassword);
-  await loginPage.expectLoginError('Usuário ou senha inválidos.');
+test("Deve falhar ao tentar realizar login com email invalido", async ({
+  loginPage,
+}) => {
+  await loginPage.login("email-invalido@email.com", userPassword);
+  await loginPage.expectLoginError("Usuário ou senha inválidos.");
 });
 
-test('Deve falhar ao tentar realizar login com campos campos vazios', async () => {
-  await loginPage.login('', '');
-  await loginPage.expectLoginError('Preencha todos os campos obrigatórios.');
+test("Deve falhar ao tentar realizar login com campos campos vazios", async ({
+  loginPage,
+}) => {
+  await loginPage.login("", "");
+  await loginPage.expectLoginError("Preencha todos os campos obrigatórios.");
 });
-
-
-

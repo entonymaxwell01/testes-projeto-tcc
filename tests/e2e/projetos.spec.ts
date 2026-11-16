@@ -1,19 +1,13 @@
-import { test } from "@playwright/test";
-import { ProjetosPage } from "../../pages/ProjetosPage";
+import { test } from "../../fixtures/page-fixtures";
 import { faker } from "@faker-js/faker/locale/pt_BR";
 
-let projetosPage: ProjetosPage;
-
-test.beforeEach(async ({ page }) => {
-  projetosPage = new ProjetosPage(page);
-  await projetosPage.goto();
-});
-
-test("Deve cadastrar um projeto com sucesso", async () => {
+test("Deve cadastrar um projeto com sucesso", async ({ projetosPage }) => {
   const projetoData = {
     nome: `Projeto ${faker.company.name()}`,
     descricao: faker.lorem.paragraph(),
   };
+
+  await projetosPage.goto();
 
   await projetosPage.cadastrarNovoProjeto(
     projetoData.nome,
@@ -22,7 +16,9 @@ test("Deve cadastrar um projeto com sucesso", async () => {
   await projetosPage.expectSuccessMessage("Projeto criado com sucesso");
 });
 
-test("Deve falhar ao tentar cadastrar um projeto sem nome", async () => {
+test("Deve falhar ao tentar cadastrar um projeto sem nome", async ({
+  projetosPage,
+}) => {
   const projetoData = {
     nome: "",
     descricao: faker.lorem.paragraph(),
@@ -35,7 +31,7 @@ test("Deve falhar ao tentar cadastrar um projeto sem nome", async () => {
   await projetosPage.expectErrorMessage("O nome do projeto é obrigatório.");
 });
 
-test("deve editar um projeto com sucesso", async () => {
+test("deve editar um projeto com sucesso", async ({ projetosPage }) => {
   const projetoData = {
     nome: `Projeto ${faker.company.name()}`,
     descricao: faker.lorem.paragraph(),
@@ -59,7 +55,7 @@ test("deve editar um projeto com sucesso", async () => {
   await projetosPage.expectSuccessMessage("Projeto atualizado com sucesso");
 });
 
-test("deve excluir um projeto com sucesso", async () => {
+test("deve excluir um projeto com sucesso", async ({ projetosPage }) => {
   const projetoData = {
     nome: `Projeto ${faker.company.name()}`,
     descricao: faker.lorem.paragraph(),
