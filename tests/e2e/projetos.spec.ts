@@ -55,7 +55,7 @@ test.describe("Projetos - Validação de campos obrigatórios", () => {
 test("deve editar um projeto com sucesso", async ({
   projetosPage,
   commonPage,
-  request,
+  projetoFactory,
   page,
 }) => {
   const projetoData = {
@@ -63,29 +63,21 @@ test("deve editar um projeto com sucesso", async ({
     descricao: faker.lorem.paragraph(),
   };
 
-  const res = await request.post(`${process.env.API_URL}/projetos`, {
-    data: {
-      titulo: projetoData.nome,
-      descricao: projetoData.descricao,
-      dataInicio: new Date().toISOString(),
-    },
-    headers: { Authorization: `Bearer ${getAuthToken()}` },
-  });
+  const projetoCriado = await projetoFactory();
+  const projetoId = projetoCriado.id;
 
   await page.reload();
-
   const projetoDataUpdate = {
     nome: `Projeto ${faker.company.name()}`,
     descricao: faker.lorem.paragraph(),
   };
 
   await projetosPage.editarProjeto(
-    projetoData.nome,
+    projetoId,
     projetoDataUpdate.nome,
     projetoDataUpdate.descricao,
   );
 
-  const projetoId = (await res.json()).id;
   await projetosPage.validarProjetoCadastrado(projetoId);
   await commonPage.expectSuccessMessage("Projeto atualizado com sucesso");
 });
@@ -93,28 +85,21 @@ test("deve editar um projeto com sucesso", async ({
 test("deve excluir um projeto com sucesso", async ({
   projetosPage,
   commonPage,
+  projetoFactory,
   page,
-  request,
 }) => {
   const projetoData = {
     nome: `Projeto ${faker.company.name()}`,
     descricao: faker.lorem.paragraph(),
   };
 
-  const res = await request.post(`${process.env.API_URL}/projetos`, {
-    data: {
-      titulo: projetoData.nome,
-      descricao: projetoData.descricao,
-      dataInicio: new Date().toISOString(),
-    },
-    headers: { Authorization: `Bearer ${getAuthToken()}` },
-  });
+  const projetoCriado = await projetoFactory();
+  const projetoId = projetoCriado.id;
 
   await page.reload();
 
-  await projetosPage.excluirProjeto(projetoData.nome);
+  await projetosPage.excluirProjeto(projetoId);
 
-  const projetoId = (await res.json()).id;
   const projetoContainer = page.getByTestId(`/project-card-${projetoId}/`);
   await expect(projetoContainer).not.toBeVisible();
   await commonPage.expectSuccessMessage("Projeto excluído com sucesso!");

@@ -31,13 +31,11 @@ export class ProjetosPage {
   }
 
   async editarProjeto(
-    nomeAtual: string,
+    idProjeto: string,
     novoNome: string,
     novaDescricao: string,
   ) {
-    const projetoContainer = this.page
-      .getByTestId(/project-card-.*/)
-      .filter({ hasText: nomeAtual });
+    const projetoContainer = this.page.getByTestId(`project-card-${idProjeto}`);
 
     const btnHover = projetoContainer
       .getByTestId(/project-menu-toggle-.*/)
@@ -51,10 +49,8 @@ export class ProjetosPage {
     await this.salvarProjetoButton.click();
   }
 
-  async excluirProjeto(nomeProjeto: string) {
-    const projetoContainer = this.page
-      .getByTestId(/project-card-.*/)
-      .filter({ hasText: nomeProjeto });
+  async excluirProjeto(idProjeto: string) {
+    const projetoContainer = this.page.getByTestId(`project-card-${idProjeto}`);
 
     const btnHover = projetoContainer
       .getByTestId(/project-menu-toggle-.*/)

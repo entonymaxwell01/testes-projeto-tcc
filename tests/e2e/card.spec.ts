@@ -4,18 +4,10 @@ import { getAuthToken } from "../../utils/auth";
 
 let projetoId: string;
 
-test.beforeEach(async ({ page, request }) => {
-  const res = await request.post(`${process.env.API_URL}/projetos`, {
-    data: {
-      titulo: `Projeto ${faker.company.name()}`,
-      descricao: faker.lorem.paragraph(),
-      dataInicio: new Date().toISOString(),
-    },
-    headers: { Authorization: `Bearer ${getAuthToken()}` },
-  });
+test.beforeEach(async ({ page, request, projetoFactory }) => {
+  const projeto = await projetoFactory();
 
-  projetoId = (await res.json()).id;
-
+  projetoId = projeto.id;
   await page.goto(`/projetos/${projetoId}/kanban`);
 });
 
