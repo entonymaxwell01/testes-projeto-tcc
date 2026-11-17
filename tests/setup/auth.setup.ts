@@ -67,5 +67,6 @@ setup("authenticate via API", async ({ request, page }) => {
       },
     ],
   };
+  fs.mkdirSync(path.dirname(authFile), { recursive: true });
   fs.writeFileSync(authFile, JSON.stringify(storageData, null, 2));
 });
