@@ -34,5 +34,6 @@ export class CardPage {
   }
   async validarCadastradoCard(idCard: string) {
     const cardContainer = this.page.getByTestId(`card-item-${idCard}`);
+    await expect(cardContainer).toBeVisible();
   }
 }
