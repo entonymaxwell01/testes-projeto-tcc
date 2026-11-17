@@ -3,9 +3,7 @@ import { faker } from "@faker-js/faker/locale/pt_BR";
 import { expect } from "@playwright/test";
 import projetosErrors from "../../data/projetos-errors.json";
 
-test.beforeEach(async ({ projetosPage }) => {
-  await projetosPage.goto();
-});
+const apiUrl = process.env.API_URL || "http://localhost:3001";
 
 test("Deve cadastrar um projeto com sucesso", async ({
   projetosPage,
@@ -24,6 +22,7 @@ test("Deve cadastrar um projeto com sucesso", async ({
       (response.status() === 200 || response.status() === 201),
   );
 
+  await projetosPage.goto();
   await projetosPage.cadastrarNovoProjeto(
     projetoData.nome,
     projetoData.descricao,
@@ -45,6 +44,7 @@ test.describe("Projetos - Validação de campos obrigatórios", () => {
       projetosPage,
       commonPage,
     }) => {
+      await projetosPage.goto();
       await projetosPage.cadastrarNovoProjeto(
         cenario.nome,
         cenario.descricaoProjeto,
@@ -59,12 +59,11 @@ test("deve editar um projeto com sucesso", async ({
   projetosPage,
   commonPage,
   projetoFactory,
-  page,
 }) => {
   const projetoCriado = await projetoFactory();
   const projetoId = projetoCriado.id;
 
-  await page.reload();
+  await projetosPage.goto();
   const projetoDataUpdate = {
     nome: `Projeto ${faker.company.name()}`,
     descricao: faker.lorem.paragraph(),
@@ -90,20 +89,14 @@ test("deve excluir um projeto com sucesso", async ({
   projetoFactory,
   page,
 }) => {
-  const projetoData = {
-    nome: `Projeto ${faker.company.name()}`,
-    descricao: faker.lorem.paragraph(),
-  };
-
   const projetoCriado = await projetoFactory();
   const projetoId = projetoCriado.id;
 
-  await page.reload();
-
+  await projetosPage.goto();
   await projetosPage.excluirProjeto(projetoId);
 
   const projetoContainer = page.getByTestId(`project-card-${projetoId}`);
-  await expect(projetoContainer).not.toBeVisible();
+  await expect(projetoContainer).toHaveCount(0);
   await commonPage.expectSuccessMessage("Projeto excluído com sucesso!");
 });
 
@@ -133,6 +126,7 @@ test.describe("Projetos - Resiliência e Mocks de API", () => {
       }
     });
 
+    await projetosPage.goto();
     await projetosPage.cadastrarNovoProjeto(
       projetoData.nome,
       projetoData.descricao,
@@ -144,7 +138,7 @@ test.describe("Projetos - Resiliência e Mocks de API", () => {
     projetosPage,
     page,
   }) => {
-    await page.route(`${process.env.API_URL}/projetos`, async (route) => {
+    await page.route(`${apiUrl}/projetos`, async (route) => {
       if (route.request().method() === "GET") {
         await route.fulfill({
           status: 200,
@@ -181,6 +175,7 @@ test.describe("Projetos - Resiliência e Mocks de API", () => {
       }
     });
 
+    await projetosPage.goto();
     await projetosPage.cadastrarNovoProjeto(
       projetoData.nome,
       projetoData.descricao,
