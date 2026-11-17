@@ -74,6 +74,6 @@ export class ProjetosPage {
   async validarProjetoCadastrado(projetoId: string) {
     const projetoContainer = this.page.getByTestId(`project-card-${projetoId}`);
 
-    expect(projetoContainer).toBeVisible();
+    await expect(projetoContainer).toBeVisible();
   }
 }
