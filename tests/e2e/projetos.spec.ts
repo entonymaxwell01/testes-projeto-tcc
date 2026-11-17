@@ -1,7 +1,6 @@
 import { test } from "../../fixtures/page-fixtures";
 import { faker } from "@faker-js/faker/locale/pt_BR";
 import { expect } from "@playwright/test";
-import { getAuthToken } from "../../utils/auth";
 import projetosErrors from "../../data/projetos-errors.json";
 
 test.beforeEach(async ({ projetosPage }) => {
@@ -100,7 +99,7 @@ test("deve excluir um projeto com sucesso", async ({
 
   await projetosPage.excluirProjeto(projetoId);
 
-  const projetoContainer = page.getByTestId(`/project-card-${projetoId}/`);
+  const projetoContainer = page.getByTestId(`project-card-${projetoId}`);
   await expect(projetoContainer).not.toBeVisible();
   await commonPage.expectSuccessMessage("Projeto excluído com sucesso!");
 });
