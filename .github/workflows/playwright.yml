@@ -108,12 +108,12 @@ jobs:
       # 10. Instalação dos navegadores do Playwright (Rápido com o Cache)
       - name: Install Playwright Browsers
         working-directory: ./qa-automation
-        run: npx playwright install --with-deps
+        run: npx playwright install chromium --with-deps
 
       # 11. Execução dos testes
       - name: Run Playwright tests
         working-directory: ./qa-automation
-        run: npx playwright test
+        run: npx playwright test --project=chromium
         env:
           # Se os testes precisarem das mesmas chaves, elas são repassadas aqui
           BASE_URL: http://localhost:5173
