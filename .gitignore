@@ -16,5 +16,6 @@ node_modules
 
 allure-report/
 allure-results/
+a11y-reports
 
 users.json
