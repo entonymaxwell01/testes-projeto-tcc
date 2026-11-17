@@ -39,11 +39,13 @@ setup("authenticate via API", async ({ request, page }) => {
       "❌ A variável QA_RESET_TOKEN não foi definida no arquivo .env ou no GitHub Secrets!",
     );
   }
-  await request.post(`${apiUrl}/qa/reset-db`, {
+  const resetResponse = await request.post(`${apiUrl}/qa/reset-db`, {
     headers: {
       "x-qa-reset-token": resetToken,
     },
   });
+
+  await expect(resetResponse).toBeOK();
 
   const res = await request.post(`${apiUrl}/login`, {
     data: {
