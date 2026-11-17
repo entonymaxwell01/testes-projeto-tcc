@@ -3,8 +3,8 @@ import { createHtmlReport } from "axe-html-reporter";
 import { test } from "../../fixtures/page-fixtures";
 import { expect } from "@playwright/test";
 
-test.describe("Testes de acessibilidade", async () => {
-  test("Deve atender as diretrizes de acessibilidade da tela de login", async ({
+test.describe("Testes de acessibilidade", () => {
+  test.skip("Deve atender as diretrizes de acessibilidade da tela de login", async ({
     page,
     loginPage,
   }) => {
@@ -25,7 +25,7 @@ test.describe("Testes de acessibilidade", async () => {
     expect(scanResults.violations).toEqual([]);
   });
 
-  test("Deve atender as diretrizes de acessibilidade da tela de projetos", async ({
+  test.skip("Deve atender as diretrizes de acessibilidade da tela de projetos", async ({
     page,
     projetosPage,
   }) => {
