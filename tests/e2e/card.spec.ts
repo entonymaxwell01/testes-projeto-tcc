@@ -19,7 +19,11 @@ test.beforeEach(async ({ page, request }) => {
   await page.goto(`/projetos/${projetoId}/kanban`);
 });
 
-test("Deve criar um card com sucesso", async ({ cardPage, commonPage }) => {
+test("Deve criar um card com sucesso", async ({
+  cardPage,
+  page,
+  commonPage,
+}) => {
   const cardData = {
     codUs: `US-${faker.string.numeric()}`,
     prioridade: "Baixa",
@@ -34,6 +38,16 @@ test("Deve criar um card com sucesso", async ({ cardPage, commonPage }) => {
     cardData.descricao,
   );
 
+  const responsePromise = page.waitForResponse(
+    (response) =>
+      response.url().includes("/cartoes") &&
+      response.request().method() === "POST" &&
+      (response.status() === 200 || response.status() === 201),
+  );
+
+  const response = await responsePromise;
+  const { id: idCard } = await response.json();
+  await cardPage.validarCadastradoCard(idCard);
   await commonPage.expectSuccessMessage("Nova funcionalidade criada!");
 });
 

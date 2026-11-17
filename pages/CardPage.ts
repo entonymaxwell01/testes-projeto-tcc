@@ -32,4 +32,7 @@ export class CardPage {
     await this.descricaoLabel.fill(descricao);
     await this.salvarButton.click();
   }
+  async validarCadastradoCard(idCard: string) {
+    const cardContainer = this.page.getByTestId(`card-item-${idCard}`);
+  }
 }

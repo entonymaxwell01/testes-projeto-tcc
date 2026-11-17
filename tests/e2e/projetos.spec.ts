@@ -10,6 +10,7 @@ test.beforeEach(async ({ projetosPage }) => {
 
 test("Deve cadastrar um projeto com sucesso", async ({
   projetosPage,
+  page,
   commonPage,
 }) => {
   const projetoData = {
@@ -17,10 +18,21 @@ test("Deve cadastrar um projeto com sucesso", async ({
     descricao: faker.lorem.paragraph(),
   };
 
+  const responsePromise = page.waitForResponse(
+    (response) =>
+      response.url().includes("/projetos") &&
+      response.request().method() === "POST" &&
+      (response.status() === 200 || response.status() === 201),
+  );
+
   await projetosPage.cadastrarNovoProjeto(
     projetoData.nome,
     projetoData.descricao,
   );
+
+  const response = await responsePromise;
+  const { id: projetoId } = await response.json();
+  await projetosPage.validarProjetoCadastrado(projetoId);
   await commonPage.expectSuccessMessage("Projeto criado com sucesso");
 });
 
@@ -34,6 +46,7 @@ test.describe("Projetos - Validação de campos obrigatórios", () => {
         cenario.nome,
         cenario.descricaoProjeto,
       );
+
       await commonPage.expectErrorMessage(cenario.mensagemEsperada);
     });
   }
@@ -71,6 +84,9 @@ test("deve editar um projeto com sucesso", async ({
     projetoDataUpdate.nome,
     projetoDataUpdate.descricao,
   );
+
+  const projetoId = (await res.json()).id;
+  await projetosPage.validarProjetoCadastrado(projetoId);
   await commonPage.expectSuccessMessage("Projeto atualizado com sucesso");
 });
 
@@ -97,6 +113,10 @@ test("deve excluir um projeto com sucesso", async ({
   await page.reload();
 
   await projetosPage.excluirProjeto(projetoData.nome);
+
+  const projetoId = (await res.json()).id;
+  const projetoContainer = page.getByTestId(`/project-card-${projetoId}/`);
+  await expect(projetoContainer).not.toBeVisible();
   await commonPage.expectSuccessMessage("Projeto excluído com sucesso!");
 });
 
