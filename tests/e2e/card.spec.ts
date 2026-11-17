@@ -1,14 +1,11 @@
 import { test } from "../../fixtures/page-fixtures";
 import { faker } from "@faker-js/faker/locale/pt_BR";
-import { getAuthToken } from "../../utils/auth";
 
 let projetoId: string;
 
-test.beforeEach(async ({ page, request, projetoFactory }) => {
+test.beforeEach(async ({ page, projetoFactory }) => {
   const projeto = await projetoFactory();
-
-  projetoId = projeto.id;
-  await page.goto(`/projetos/${projetoId}/kanban`);
+  await page.goto(`/projetos/${projeto.id}/kanban`);
 });
 
 test("Deve criar um card com sucesso", async ({
@@ -23,18 +20,18 @@ test("Deve criar um card com sucesso", async ({
     descricao: faker.lorem.paragraph(),
   };
 
-  await cardPage.criarCard(
-    cardData.codUs,
-    cardData.prioridade,
-    cardData.titulo,
-    cardData.descricao,
-  );
-
   const responsePromise = page.waitForResponse(
     (response) =>
       response.url().includes("/cartoes") &&
       response.request().method() === "POST" &&
       (response.status() === 200 || response.status() === 201),
+  );
+
+  await cardPage.criarCard(
+    cardData.codUs,
+    cardData.prioridade,
+    cardData.titulo,
+    cardData.descricao,
   );
 
   const response = await responsePromise;
