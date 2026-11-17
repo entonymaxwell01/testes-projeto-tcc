@@ -1,5 +1,4 @@
-import { Page, Locator, expect } from '@playwright/test';
-
+import { Page, Locator, expect } from "@playwright/test";
 
 export class LoginPage {
   readonly page: Page;
@@ -12,16 +11,15 @@ export class LoginPage {
   constructor(page: Page) {
     this.page = page;
 
-    this.emailInput = page.getByTestId('input-email');
-    this.passwordInput = page.getByTestId('input-senha');
-    this.loginButton = page.getByTestId('btn-login');
-    this.loginText = page.getByText('TestBoard');
-    this.errorMessage = page.getByTestId('msg-erro'); 
-  
+    this.emailInput = page.getByTestId("input-email");
+    this.passwordInput = page.getByTestId("input-senha");
+    this.loginButton = page.getByTestId("btn-login");
+    this.loginText = page.getByText("TestBoard");
+    this.errorMessage = page.getByTestId("msg-erro");
   }
 
   async goto() {
-    await this.page.goto('/');
+    await this.page.goto("/");
   }
 
   async login(email: string, password: string) {
@@ -30,9 +28,8 @@ export class LoginPage {
     await this.loginButton.click();
   }
 
-
   async expectLoginSuccess() {
-    await this.page.waitForURL('/projetos');
+    await this.page.waitForURL("/projetos");
     await expect(this.loginText).toBeVisible();
   }
 
@@ -40,6 +37,4 @@ export class LoginPage {
     await expect(this.errorMessage).toBeVisible();
     await expect(this.errorMessage).toHaveText(expectedText);
   }
-
-  
 }
