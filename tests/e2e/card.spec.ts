@@ -5,7 +5,7 @@ import { getAuthToken } from "../../utils/auth";
 let projetoId: string;
 
 test.beforeEach(async ({ page, request }) => {
-  const res = await request.post("http://localhost:3001/projetos", {
+  const res = await request.post(`${process.env.API_URL}/projetos`, {
     data: {
       titulo: `Projeto ${faker.company.name()}`,
       descricao: faker.lorem.paragraph(),

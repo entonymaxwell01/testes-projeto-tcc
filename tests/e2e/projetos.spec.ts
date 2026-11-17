@@ -4,6 +4,10 @@ import { expect } from "@playwright/test";
 import { getAuthToken } from "../../utils/auth";
 import projetosErrors from "../../data/projetos-errors.json";
 
+test.beforeEach(async ({ projetosPage }) => {
+  await projetosPage.goto();
+});
+
 test("Deve cadastrar um projeto com sucesso", async ({
   projetosPage,
   commonPage,
@@ -48,7 +52,7 @@ test("deve editar um projeto com sucesso", async ({
     descricao: faker.lorem.paragraph(),
   };
 
-  const res = await request.post("http://localhost:3001/projetos", {
+  const res = await request.post(`${process.env.API_URL}/projetos`, {
     data: {
       titulo: projetoData.nome,
       descricao: projetoData.descricao,
@@ -83,7 +87,7 @@ test("deve excluir um projeto com sucesso", async ({
     descricao: faker.lorem.paragraph(),
   };
 
-  const res = await request.post("http://localhost:3001/projetos", {
+  const res = await request.post(`${process.env.API_URL}/projetos`, {
     data: {
       titulo: projetoData.nome,
       descricao: projetoData.descricao,
