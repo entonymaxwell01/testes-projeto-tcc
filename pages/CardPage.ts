@@ -8,8 +8,6 @@ export class CardPage {
   readonly tituloLabel: Locator;
   readonly descricaoLabel: Locator;
   readonly salvarButton: Locator;
-  readonly errorMessage: Locator;
-  readonly successMessage: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -19,8 +17,6 @@ export class CardPage {
     this.tituloLabel = page.getByTestId("input-titulo-cartao");
     this.descricaoLabel = page.getByTestId("input-descricao-cartao");
     this.salvarButton = page.getByTestId("btn-salvar-cartao");
-    this.errorMessage = page.getByTestId("msg-erro").first();
-    this.successMessage = page.getByTestId("msg-sucesso").first();
   }
 
   async criarCard(
@@ -35,15 +31,5 @@ export class CardPage {
     await this.tituloLabel.fill(titulo);
     await this.descricaoLabel.fill(descricao);
     await this.salvarButton.click();
-  }
-
-  async expectSuccessMessage(expectedText: string) {
-    await expect(this.successMessage).toBeVisible();
-    await expect(this.successMessage).toContainText(expectedText);
-  }
-
-  async expectErrorMessage(expectedText: string) {
-    await expect(this.errorMessage).toBeVisible();
-    await expect(this.errorMessage).toHaveText(expectedText);
   }
 }

@@ -30,16 +30,6 @@ export class ProjetosPage {
     await this.salvarProjetoButton.click();
   }
 
-  async expectSuccessMessage(expectedText: string) {
-    await expect(this.successMessage).toBeVisible();
-    await expect(this.successMessage).toContainText(expectedText);
-  }
-
-  async expectErrorMessage(expectedText: string) {
-    await expect(this.errorMessage).toBeVisible();
-    await expect(this.errorMessage).toContainText(expectedText);
-  }
-
   async editarProjeto(
     nomeAtual: string,
     novoNome: string,

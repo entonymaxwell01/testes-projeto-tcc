@@ -2,11 +2,13 @@ import { test as baseTest } from "@playwright/test";
 import { LoginPage } from "../pages/LoginPage";
 import { CardPage } from "../pages/CardPage";
 import { ProjetosPage } from "../pages/ProjetosPage";
+import { CommonPage } from "../pages/CommonPage";
 
 type PagesFixtures = {
   loginPage: LoginPage;
   projetosPage: ProjetosPage;
   cardPage: CardPage;
+  commonPage: CommonPage;
 };
 
 export const test = baseTest.extend<PagesFixtures>({
@@ -25,6 +27,11 @@ export const test = baseTest.extend<PagesFixtures>({
   cardPage: async ({ page }, use) => {
     const cardPage = new CardPage(page);
     await use(cardPage);
+  },
+
+  commonPage: async ({ page }, use) => {
+    const commonPage = new CommonPage(page);
+    await use(commonPage);
   },
 });
 export { expect } from "@playwright/test";
