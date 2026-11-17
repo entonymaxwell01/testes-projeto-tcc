@@ -17,8 +17,6 @@ test("Deve cadastrar um projeto com sucesso", async ({
     descricao: faker.lorem.paragraph(),
   };
 
-  await projetosPage.goto();
-
   await projetosPage.cadastrarNovoProjeto(
     projetoData.nome,
     projetoData.descricao,

@@ -39,7 +39,9 @@ export class ProjetosPage {
       .getByTestId(/project-card-.*/)
       .filter({ hasText: nomeAtual });
 
-    const btnHover = projetoContainer.getByTestId(/project-menu-toggle-.*/);
+    const btnHover = projetoContainer
+      .getByTestId(/project-menu-toggle-.*/)
+      .first();
     const btnEdit = projetoContainer.getByTestId(/project-edit-button-.*/);
 
     await btnHover.click();
@@ -54,7 +56,9 @@ export class ProjetosPage {
       .getByTestId(/project-card-.*/)
       .filter({ hasText: nomeProjeto });
 
-    const btnHover = projetoContainer.getByTestId(/project-menu-toggle-.*/);
+    const btnHover = projetoContainer
+      .getByTestId(/project-menu-toggle-.*/)
+      .first();
     const btnDelete = projetoContainer.getByTestId(/project-delete-button-.*/);
 
     await btnHover.click();
