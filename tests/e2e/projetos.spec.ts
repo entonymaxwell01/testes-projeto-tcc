@@ -1,5 +1,6 @@
 import { test } from "../../fixtures/page-fixtures";
 import { faker } from "@faker-js/faker/locale/pt_BR";
+import { getAuthToken } from "../../utils/auth";
 import projetosErrors from "../../data/projetos-errors.json";
 
 test("Deve cadastrar um projeto com sucesso", async ({ projetosPage }) => {
@@ -31,16 +32,26 @@ test.describe("Projetos - Validação de campos obrigatórios", () => {
   }
 });
 
-test("deve editar um projeto com sucesso", async ({ projetosPage }) => {
+test("deve editar um projeto com sucesso", async ({
+  projetosPage,
+  request,
+  page,
+}) => {
   const projetoData = {
     nome: `Projeto ${faker.company.name()}`,
     descricao: faker.lorem.paragraph(),
   };
 
-  await projetosPage.cadastrarNovoProjeto(
-    projetoData.nome,
-    projetoData.descricao,
-  );
+  const res = await request.post("http://localhost:3001/projetos", {
+    data: {
+      titulo: projetoData.nome,
+      descricao: projetoData.descricao,
+      dataInicio: new Date().toISOString(),
+    },
+    headers: { Authorization: `Bearer ${getAuthToken()}` },
+  });
+
+  await page.reload();
 
   const projetoDataUpdate = {
     nome: `Projeto ${faker.company.name()}`,
@@ -55,16 +66,26 @@ test("deve editar um projeto com sucesso", async ({ projetosPage }) => {
   await projetosPage.expectSuccessMessage("Projeto atualizado com sucesso");
 });
 
-test("deve excluir um projeto com sucesso", async ({ projetosPage }) => {
+test("deve excluir um projeto com sucesso", async ({
+  projetosPage,
+  page,
+  request,
+}) => {
   const projetoData = {
     nome: `Projeto ${faker.company.name()}`,
     descricao: faker.lorem.paragraph(),
   };
 
-  await projetosPage.cadastrarNovoProjeto(
-    projetoData.nome,
-    projetoData.descricao,
-  );
+  const res = await request.post("http://localhost:3001/projetos", {
+    data: {
+      titulo: projetoData.nome,
+      descricao: projetoData.descricao,
+      dataInicio: new Date().toISOString(),
+    },
+    headers: { Authorization: `Bearer ${getAuthToken()}` },
+  });
+
+  await page.reload();
 
   await projetosPage.excluirProjeto(projetoData.nome);
   await projetosPage.expectSuccessMessage("Projeto excluído com sucesso!");
