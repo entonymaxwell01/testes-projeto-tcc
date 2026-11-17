@@ -1,1 +1,0 @@
-HTML report was saved into the following directory /home/runner/work/testes-projeto-tcc/testes-projeto-tcc/qa-automation/a11y-reports/login-acessibilidade.html
