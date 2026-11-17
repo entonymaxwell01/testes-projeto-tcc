@@ -1,8 +1,6 @@
 import { test } from "../../fixtures/page-fixtures";
 import { faker } from "@faker-js/faker/locale/pt_BR";
 
-let projetoId: string;
-
 test.beforeEach(async ({ page, projetoFactory }) => {
   const projeto = await projetoFactory();
   await page.goto(`/projetos/${projeto.id}/kanban`);

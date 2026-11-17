@@ -31,7 +31,11 @@ test("Deve cadastrar um projeto com sucesso", async ({
 
   const response = await responsePromise;
   const { id: projetoId } = await response.json();
-  await projetosPage.validarProjetoCadastrado(projetoId);
+  await projetosPage.validarProjetoCadastrado(
+    projetoId,
+    projetoData.nome,
+    projetoData.descricao,
+  );
   await commonPage.expectSuccessMessage("Projeto criado com sucesso");
 });
 
@@ -57,11 +61,6 @@ test("deve editar um projeto com sucesso", async ({
   projetoFactory,
   page,
 }) => {
-  const projetoData = {
-    nome: `Projeto ${faker.company.name()}`,
-    descricao: faker.lorem.paragraph(),
-  };
-
   const projetoCriado = await projetoFactory();
   const projetoId = projetoCriado.id;
 
@@ -77,7 +76,11 @@ test("deve editar um projeto com sucesso", async ({
     projetoDataUpdate.descricao,
   );
 
-  await projetosPage.validarProjetoCadastrado(projetoId);
+  await projetosPage.validarProjetoCadastrado(
+    projetoId,
+    projetoDataUpdate.nome,
+    projetoDataUpdate.descricao,
+  );
   await commonPage.expectSuccessMessage("Projeto atualizado com sucesso");
 });
 

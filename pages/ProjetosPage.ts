@@ -71,9 +71,15 @@ export class ProjetosPage {
     await projetoContainer.click();
   }
 
-  async validarProjetoCadastrado(projetoId: string) {
+  async validarProjetoCadastrado(
+    projetoId: string,
+    projetoNome: string,
+    projetoDescricao: string,
+  ) {
     const projetoContainer = this.page.getByTestId(`project-card-${projetoId}`);
 
     await expect(projetoContainer).toBeVisible();
+    await expect(projetoContainer).toContainText(projetoNome);
+    await expect(projetoContainer).toContainText(projetoDescricao);
   }
 }
